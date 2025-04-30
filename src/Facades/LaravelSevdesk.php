@@ -11,6 +11,8 @@ use mindtwo\LaravelSevdesk\Api;
  * @method static Api\StaticCountriesApi countries()
  * @method static Api\InvoicesApi invoices()
  * @method static Api\ContactsApi contacts()
+ * @method static Api\CategoriesApi categories()
+ * @method static Api\BaseApiService base()
  */
 class LaravelSevdesk extends Facade
 {
