@@ -104,7 +104,7 @@ trait SevdeskCustomer
             ...$options,
         ]);
 
-        $invoice = LaravelSevdesk::invoices()->createInvoice($invoicePositions, $invoiceData->toArray());
+        $invoice = LaravelSevdesk::invoices()->createInvoice($invoiceData->toArray(), $invoicePositions);
 
         return $invoice;
     }
