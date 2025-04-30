@@ -59,11 +59,11 @@ class Invoice extends Data
      */
     public string $invoiceDate;
 
-    public string|Optional $header;
+    public null|string|Optional $header;
 
-    public string|Optional $headText;
+    public null|string|Optional $headText;
 
-    public string|Optional $footText;
+    public null|string|Optional $footText;
 
     public int|Optional $timeToPay;
 
@@ -78,7 +78,7 @@ class Invoice extends Data
     /**
      * Complete address of the recipient including name, street, city, zip and country.<br>\r\n     Line breaks can be used and will be displayed on the invoice pdf.
      */
-    public string|Optional $address;
+    public null|string|Optional $address;
 
     /**
      * The country of the invoice address.
@@ -88,7 +88,7 @@ class Invoice extends Data
     #[WithCastable(StaticCountry::class, normalize: true)]
     public StaticCountry $addressCountry;
 
-    public string|Optional $payDate;
+    public null|string|Optional $payDate;
 
     /**
      * User who created the voucher. Will be filled automatically.
@@ -97,7 +97,7 @@ class Invoice extends Data
 
     public string|Optional $deliveryDate;
 
-    public int|Optional $deliveryDateUntil;
+    public null|int|Optional $deliveryDateUntil;
 
     /**
      * Please have a look in our\r\n     <a href='#tag/Invoice/Types-and-status-of-invoices'>Types and status of invoices</a>\r\n     to see what the different status codes mean
@@ -127,7 +127,7 @@ class Invoice extends Data
      *
      * required
      */
-    public string $taxText;
+    public null|string|Optional $taxText;
 
     /**
      * **Use this in sevdesk-Update 1.0 (instead of taxRule).**
@@ -150,7 +150,7 @@ class Invoice extends Data
      *
      *         Tax rates are heavily connected to the tax type used.
      */
-    public string|Optional $taxType;
+    public null|string|Optional $taxType;
 
     /**
      *  **Use this in sevdesk-Update 1.0 (instead of taxRule).**
@@ -160,11 +160,11 @@ class Invoice extends Data
      */
     public array|Optional $taxSet;
 
-    public int|Optional $dunningLevel;
+    public null|int|Optional $dunningLevel;
 
     public array|Optional $paymentMethod;
 
-    public string|Optional $sendDate;
+    public null|string|Optional $sendDate;
 
     /**
      * The type of invoice. Please have a look in our\r\n     <a href='#tag/Invoice/Types-and-status-of-invoices'>Types and status of invoices</a>\r\n     to see what the different types mean
@@ -172,9 +172,9 @@ class Invoice extends Data
     #[WithCast(EnumCast::class, InvoiceTypeEnum::class)]
     public InvoiceTypeEnum $invoiceType;
 
-    public string|Optional $accountIntervall;
+    public null|string|Optional $accountIntervall;
 
-    public int|Optional $accountNextInvoice;
+    public null|int|Optional $accountNextInvoice;
 
     /**
      * Currency used in the order. Needs to be currency code according to ISO-4217
@@ -207,13 +207,13 @@ class Invoice extends Data
 
     public bool $showNet;
 
-    public string|Optional $enshrined;
+    public null|string|Optional $enshrined;
 
     public string|Optional $sendType;
 
     public array|Optional $origin;
 
-    public string|Optional $customerInternalNote;
+    public null|string|Optional $customerInternalNote;
 
     /**
      * If true, the invoice will be created as e-invoice.
@@ -240,7 +240,7 @@ class Invoice extends Data
      *           - addressCountry
      *           - contact
      */
-    public bool|Optional $propertyIsEInvoice;
+    public bool $propertyIsEInvoice = false;
 
     public bool $mapAll;
 
@@ -276,20 +276,14 @@ class Invoice extends Data
             'invoiceType' => InvoiceTypeEnum::NORMAL,
             // TODO config default
             'currency' => 'EUR',
+            // TODO - this should not be required
+            'taxType' => 'default',
+            'taxRate' => 19,
         ];
 
         return self::from([
             ...$defaults,
             ...$parameters,
         ]);
-
-        // $parameters = [
-
-        //     'paymentMethod' => [
-        //         'id' => 21919,
-        //         'objectName' => 'PaymentMethod',
-        //     ],
-        //     ...$data->billingAddress->toSevDeskInvoiceAddress(),
-        // ];
     }
 }
