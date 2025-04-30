@@ -1,4 +1,4 @@
-# This is my package laravel-sevdesk
+# mindtwo/laravel-sevdesk
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/mindtwo/laravel-sevdesk.svg?style=flat-square)](https://packagist.org/packages/mindtwo/laravel-sevdesk)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/mindtwo/laravel-sevdesk/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/mindtwo/laravel-sevdesk/actions?query=workflow%3Arun-tests+branch%3Amain)
