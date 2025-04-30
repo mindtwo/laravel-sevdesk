@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace mindtwo\LaravelSevdesk\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class LaravelSevdeskCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'laravel-sevdesk';
 
     public $description = 'My command';
 
