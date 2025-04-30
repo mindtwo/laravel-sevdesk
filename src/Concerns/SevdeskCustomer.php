@@ -2,7 +2,6 @@
 
 namespace mindtwo\LaravelSevdesk\Concerns;
 
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\Log;
 use mindtwo\LaravelSevdesk\DataTransferObjects\Address;
 use mindtwo\LaravelSevdesk\DataTransferObjects\Invoice;
@@ -35,19 +34,6 @@ trait SevdeskCustomer
         }
 
         return 'sevdesk_customer_id';
-    }
-
-    /**
-     * Get the sevdesk customer ID.
-     *
-     * @return Attribute<int|string, int|string>
-     */
-    public function sevdeskCustomerId(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => $value ?? $this->getSevdeskCustomerId(),
-            set: fn ($value) => $this->setAttribute($this->getSevdeskCustomerIdColumn(), $value),
-        );
     }
 
     /**

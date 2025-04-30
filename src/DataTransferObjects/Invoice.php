@@ -267,7 +267,7 @@ class Invoice extends Data
             //     'header' => 'Rechnung',
             //     'headText' => 'Für die Teilnahme am Deutschen Stiftungstag 2025 des Bundesverbandes Deutscher Stiftungen vom 21. bis 22. Mai 2025 in Wiesbaden berechnen wir:',
             //     'footText' => 'Die Tagungsgebühr ist gemäß §4 Nr. 22a UStG von der Umsatzsteuer befreit.<br><br> Bitte überweisen Sie den oben ausgewiesenen Rechnungsbetrag innerhalb von 14 Tagen <strong>unter Angabe des Verwendungszwecks (Name, Vorname + Rechnungsnummer)</strong> auf das nachfolgende Konto.<br><br> Ihr Ticket wird erst nach vollständigem Zahlungseingang gültig. Der Teilnehmendenausweis (Namensbadge) wird Ihnen 14 Tage vor Veranstaltungsbeginn postalisch zugesendet.<br><br>',
-            'timeToPay' => config('services.sevdesk.invoice.time_to_pay'),
+            'timeToPay' => config('sevdesk.invoice.time_to_pay'),
             'taxRule' => TaxRuleEnum::VAT_SUBJECTED,
             'addressCountry' => 1,
             'mapAll' => true,
