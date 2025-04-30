@@ -14,7 +14,7 @@ class LaravelSevdeskCommand extends Command
     public function handle(): int
     {
         $response = LaravelSevdesk::base()
-            ->get('/CheckAccount');
+            ->get('/SevUser');
 
         $sevClientId = $response->json('objects.0');
 
