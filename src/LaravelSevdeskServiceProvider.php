@@ -2,9 +2,9 @@
 
 namespace mindtwo\LaravelSevdesk;
 
+use mindtwo\LaravelSevdesk\Commands\LaravelSevdeskCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use mindtwo\LaravelSevdesk\Commands\LaravelSevdeskCommand;
 
 class LaravelSevdeskServiceProvider extends PackageServiceProvider
 {
