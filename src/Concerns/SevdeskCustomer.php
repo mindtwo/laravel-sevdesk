@@ -107,7 +107,7 @@ trait SevdeskCustomer
      * @param  array  $invoicePositions  - The invoice positions
      * @param  array  $options  - The invoice options
      */
-    public function createInvoice(array $invoicePositions, array $options = []): Invoice
+    public function createSevdeskInvoice(array $invoicePositions, array $options = []): Invoice
     {
         if ($this->getSevdeskCustomerId() === null) {
             $this->createOrGetSevdeskCustomer();
