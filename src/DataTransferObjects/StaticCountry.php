@@ -24,9 +24,9 @@ class StaticCountry extends Data implements Castable
                     return StaticCountry::from($value);
                 }
 
-                if (is_int($value)) {
+                if (is_numeric($value)) {
                     $instance = new StaticCountry;
-                    $instance->id = $value;
+                    $instance->id = ! is_int($value) ? (int) $value : $value;
 
                     return $instance;
                 }

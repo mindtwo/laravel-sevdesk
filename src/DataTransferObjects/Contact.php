@@ -24,9 +24,9 @@ class Contact extends Data implements Castable
                     return Contact::from($value);
                 }
 
-                if (is_int($value)) {
+                if (is_numeric($value)) {
                     $instance = new Contact;
-                    $instance->id = $value;
+                    $instance->id = ! is_int($value) ? (int) $value : $value;
 
                     return $instance;
                 }

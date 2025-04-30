@@ -16,7 +16,7 @@ enum ContactTypeEnum: int
     {
         return [
             'id' => $this->value,
-            'objectName' => 'ContactType',
+            'objectName' => 'Category',
         ];
     }
 }

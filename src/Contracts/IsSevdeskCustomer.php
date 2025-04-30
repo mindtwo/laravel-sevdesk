@@ -10,7 +10,7 @@ interface IsSevdeskCustomer
     /**
      * Get the sevdesk customer ID.
      */
-    public function getSevdeskCustomerId(): int|string;
+    public function getSevdeskCustomerId(): ?int;
 
     /**
      * Get the column name for the sevdesk customer ID.

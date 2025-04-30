@@ -20,9 +20,9 @@ trait SevdeskCustomer
     /**
      * Get the sevdesk customer ID.
      */
-    public function getSevdeskCustomerId(): int|string
+    public function getSevdeskCustomerId(): ?int
     {
-        return $this->getAttribute($this->getSevdeskCustomerIdColumn());
+        return $this->attributes[$this->getSevdeskCustomerIdColumn()] ?? null;
     }
 
     /**
@@ -62,7 +62,7 @@ trait SevdeskCustomer
      */
     public function createOrGetSevdeskCustomer(?Address $address = null, bool $withCommunicationWays = true): self
     {
-        if ($this->getSevdeskCustomerId() === null && $address === null) {
+        if ($this->getSevdeskCustomerId() === null && $address === null && $withCommunicationWays) {
             return $this;
         }
 
