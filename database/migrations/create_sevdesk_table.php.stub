@@ -8,6 +8,7 @@ return new class extends Migration
 {
     public function up()
     {
+        // TODO - add sevdesk_user_id or name column to users table
         Schema::create('laravel_sevdesk_table', function (Blueprint $table) {
             $table->id();
 
