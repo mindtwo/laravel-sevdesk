@@ -2,6 +2,7 @@
 
 namespace mindtwo\LaravelSevdesk\DataTransferObjects;
 
+use mindtwo\LaravelSevdesk\DataTransferObjects\Casts\TaxRuleEnumCast;
 use mindtwo\LaravelSevdesk\Enums\Invoice\InvoiceStatusEnum;
 use mindtwo\LaravelSevdesk\Enums\Invoice\InvoiceTypeEnum;
 use mindtwo\LaravelSevdesk\Enums\Invoice\TaxRuleEnum;
@@ -118,7 +119,7 @@ class Invoice extends Data
      *
      * required
      */
-    #[WithCast(EnumCast::class, TaxRuleEnum::class)]
+    #[WithCast(TaxRuleEnumCast::class)]
     public TaxRuleEnum $taxRule;
 
     /**
