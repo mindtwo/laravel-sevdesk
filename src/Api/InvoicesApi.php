@@ -110,15 +110,19 @@ class InvoicesApi extends BaseApiService
     /**
      * Mark invoice as paid
      *
-     * @param  int  $invoiceId  - the invoice id from sevDesk
+     * @param  int|Invoice  $invoice  - the invoice id from sevDesk
      * @param  int  $amount  - the amount to mark as paid
      * @param  BookingTypeEnum  $type  - the payment type (FULL_PAYMENT, ...)
      */
-    public function markInvoiceAsPaid(int $invoiceId, int|float $amount, BookingTypeEnum $type = BookingTypeEnum::FULL_PAYMENT): array
+    public function markInvoiceAsPaid(int|Invoice $invoice, int|float $amount, BookingTypeEnum $type = BookingTypeEnum::FULL_PAYMENT): array
     {
 
         if (! $this->checkAccount) {
             throw new Exception('Check account is required');
+        }
+
+        if ($invoice instanceof Invoice) {
+            $invoice = $invoice->id;
         }
 
         // The request body
@@ -132,7 +136,7 @@ class InvoicesApi extends BaseApiService
             ],
         ];
 
-        $response = $this->client()->put("Invoice/{$invoiceId}/bookAmount", $data);
+        $response = $this->client()->put("Invoice/{$invoice}/bookAmount", $data);
 
         if (! $response->successful()) {
             throw new Exception('Could not mark invoice as paid');
@@ -147,12 +151,16 @@ class InvoicesApi extends BaseApiService
      * Mark invoice as sent in sevDesk
      * This transitions the invoice from draft to sent
      *
-     * @param  int  $invoiceId  - the invoice id from sevDesk
+     * @param  int|Invoice  $invoice  - the invoice id from sevDesk
      * @param  InvoiceSendTypeEnum  $sendType  - the send type (VM = email, ...)
      */
-    public function markAsSent(int $invoiceId, InvoiceSendTypeEnum $sendType = InvoiceSendTypeEnum::MAIL): array
+    public function markAsSent(int|Invoice $invoice, InvoiceSendTypeEnum $sendType = InvoiceSendTypeEnum::MAIL): array
     {
-        $response = $this->client()->put("Invoice/{$invoiceId}/sendBy", [
+        if ($invoice instanceof Invoice) {
+            $invoice = $invoice->id;
+        }
+
+        $response = $this->client()->put("Invoice/{$invoice}/sendBy", [
             'sendType' => $sendType,
             'sendDraft' => false,
         ]);
@@ -167,18 +175,18 @@ class InvoicesApi extends BaseApiService
     /**
      * Send invoice by email
      *
-     * @param  int  $invoiceId  - the invoice id from sevDesk
+     * @param  int|Invoice  $invoice  - the invoice id from sevDesk
      * @param  string  $email  - the email address to send the invoice to
      * @param  ?string  $subject  - the subject of the email
      * @param  ?string  $text  - the text of the email
      */
-    public function sendInvoiceViaMail(int $invoiceId, string $email, ?string $subject = null, ?string $text = null): array
+    public function sendInvoiceViaMail(int|Invoice $invoice, string $email, ?string $subject = null, ?string $text = null): array
     {
         // Send email
         $subject = $subject ?? config('sevdesk-api.invoice_email.subject');
         $text = $text ?? config('sevdesk-api.invoice_email.text');
 
-        $response = $this->client()->post("Invoice/{$invoiceId}/sendViaEmail", [
+        $response = $this->client()->post("Invoice/{$invoice}/sendViaEmail", [
             'toEmail' => $email,
             'subject' => $subject,
             'text' => $text,
