@@ -8,13 +8,11 @@ use Spatie\LaravelData\Optional;
 
 class InvoicePosition extends Data
 {
-    #[Computed]
     public string $objectName = 'InvoicePos';
 
     #[Computed]
     public Unity $unity;
 
-    #[Computed]
     public int|Optional $positionNumber;
 
     public function __construct(
@@ -29,7 +27,7 @@ class InvoicePosition extends Data
         public bool $mapAll = true,
         public mixed $optional = null,
         ?Unity $unity = null,
-        ?int $positionNumber = null,
+        null|int|Optional $positionNumber = null,
     ) {
         $this->unity = $unity ?? Unity::from([
             'id' => 1,
