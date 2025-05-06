@@ -12,7 +12,7 @@ use mindtwo\LaravelSevdesk\Api;
  * @method static Api\InvoicesApi invoices()
  * @method static Api\ContactsApi contacts()
  * @method static Api\CategoriesApi categories()
- * @method static Api\BaseApiService base()
+ * @method static Api\BaseClient base()
  */
 class LaravelSevdesk extends Facade
 {

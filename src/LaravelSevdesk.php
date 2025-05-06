@@ -4,6 +4,7 @@ namespace mindtwo\LaravelSevdesk;
 
 use Exception;
 use mindtwo\LaravelSevdesk\Api\BaseApiService;
+use mindtwo\LaravelSevdesk\Api\BaseClient;
 use mindtwo\LaravelSevdesk\Api\CategoriesApi;
 use mindtwo\LaravelSevdesk\Api\ContactsApi;
 use mindtwo\LaravelSevdesk\Api\InvoicesApi;
@@ -64,19 +65,6 @@ class LaravelSevdesk
     {
         $apiToken = $this->apiToken;
 
-        return new class($apiToken) extends BaseApiService
-        {
-            protected ?string $apiToken;
-
-            public function __construct(string $apiToken)
-            {
-                $this->apiToken = $apiToken;
-            }
-
-            public function get(string $path, array $query = []): \Illuminate\Http\Client\Response
-            {
-                return $this->client()->get($path, $query);
-            }
-        };
+        return new BaseClient($apiToken);
     }
 }
