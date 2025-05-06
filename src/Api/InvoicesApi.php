@@ -182,6 +182,10 @@ class InvoicesApi extends BaseApiService
      */
     public function sendInvoiceViaMail(int|Invoice $invoice, string $email, ?string $subject = null, ?string $text = null): array
     {
+        if ($invoice instanceof Invoice) {
+            $invoice = $invoice->id;
+        }
+
         // Send email
         $subject = $subject ?? config('sevdesk-api.invoice_email.subject');
         $text = $text ?? config('sevdesk-api.invoice_email.text');
