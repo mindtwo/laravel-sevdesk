@@ -42,6 +42,8 @@ class ContactsApi extends BaseApiService
 
     /**
      * Create a contact in sevDesk
+     *
+     * TODO - data dto
      */
     public function createContact(array $data): array
     {
@@ -56,6 +58,7 @@ class ContactsApi extends BaseApiService
 
     /**
      * Update a contact in sevDesk
+     * TODO - data dto
      *
      * @param  int|IsSevdeskCustomer  $customerOrSevdeskCustomerId  - The customer or the identifier of the sevdesk customer
      */
