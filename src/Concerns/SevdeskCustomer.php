@@ -37,32 +37,61 @@ trait SevdeskCustomer
     }
 
     /**
+     * Update the sevdesk customer ID column.
+     */
+    public function updateSevdeskCustomerId(?int $sevdeskCustomerId): void
+    {
+        $columnName = $this->getSevdeskCustomerIdColumn();
+
+        $this->{$columnName} = $sevdeskCustomerId;
+        $this->save();
+    }
+
+    /**
      * METHODS TO HANDLE THE SEVDESK CUSTOMER
      */
+
+    /**
+     * Get or create the sevdesk customer.
+     *
+     * @return array - the SevDesk customer data
+     */
+    public function getOrCreateSevdeskCustomer(): array
+    {
+        // If the customer already exists, return it
+        if ($this->getSevdeskCustomerId() !== null && ($data = $this->getSevdeskCustomer()) !== null) {
+            return $data;
+        }
+
+        // Create the customer
+        $this->createSevdeskCustomer();
+
+        // Return the customer
+        return $this->getSevdeskCustomer();
+    }
 
     /**
      * Create or get the sevdesk customer.
      *
      * @param  Address|null  $address  - The address to create the customer with
-     * @param  bool  $withCommunicationWays  - Whether to add communication ways to the customer
+     * @param  ContactTypeEnum|null  $contactType  - The contact type (e.g. customer, supplier)
      */
-    public function createOrGetSevdeskCustomer(?Address $address = null, bool $withCommunicationWays = true): self
+    public function createSevdeskCustomerWithAddress(?Address $address = null, ?ContactTypeEnum $contactType = null): self
     {
-        if ($this->getSevdeskCustomerId() === null && $address === null && $withCommunicationWays) {
-            return $this;
-        }
-
         // If the customer already exists, return it
         if ($this->getSevdeskCustomerId() !== null) {
             return $this;
         }
 
+        $contactType = $contactType ?? ContactTypeEnum::CUSTOMER;
+
+        // TODO - DTO
         // Customer data for SevDesk
         $customerData = [
             'academicTitle' => $this->title ?? '',
             'surename' => $this->first_name,
             'familyname' => $this->last_name,
-            'category' => ContactTypeEnum::CUSTOMER->toRequestArray(),
+            'category' => $contactType->toRequestArray(),
             'status' => ContactStatusEnum::Active->value,
             'buyerReference' => $this->uuid,
         ];
@@ -74,17 +103,34 @@ trait SevdeskCustomer
             throw new \Exception('Could not create SevDesk contact');
         }
 
-        $columnName = $this->getSevdeskCustomerIdColumn();
-
-        $this->{$columnName} = $contact['id'];
-        $this->save();
+        $this->updateSevdeskCustomerId($contact['id']);
 
         // If with communication ways is true, add communication ways to the customer
-        if ($withCommunicationWays) {
+        if ($address !== null) {
             $this->addCommunicationWays($contact['id'], $address);
         }
 
         return $this;
+    }
+
+    /**
+     * Create a customer in SevDesk.
+     * Shorthand for createSevdeskCustomerWithAddress() with default parameters.
+     */
+    public function createSevdeskCustomer(): self
+    {
+        return $this->createSevdeskCustomerWithAddress();
+    }
+
+    /**
+     * Create a customer in SevDesk.
+     * Shorthand for createSevdeskCustomerWithAddress() with a specific contact type.
+     *
+     * @param  ContactTypeEnum  $contactType  - The contact type (e.g. customer, supplier)
+     */
+    public function createSevdeskCustomerWithType(ContactTypeEnum $contactType): self
+    {
+        return $this->createSevdeskCustomerWithAddress(null, $contactType);
     }
 
     /**
@@ -95,12 +141,20 @@ trait SevdeskCustomer
      */
     public function createSevdeskInvoice(array $invoicePositions, array $options = []): Invoice
     {
-        if ($this->getSevdeskCustomerId() === null) {
-            $this->createOrGetSevdeskCustomer();
+        // If the customer ID is null, we try to create the customer
+        if (! $this->getSevdeskCustomerId() === null) {
+            $this->createSevdeskCustomer();
+        }
+
+        $customerId = $this->getSevdeskCustomerId();
+
+        // If the customer ID is null, we cannot create an invoice
+        if ($customerId === null) {
+            throw new \Exception('Could not create SevDesk invoice, customer ID is null. Please create the customer first.');
         }
 
         $invoiceData = Invoice::default([
-            'contact' => $this->getSevdeskCustomerId(),
+            'contact' => $customerId,
             ...$options,
         ]);
 
@@ -109,6 +163,30 @@ trait SevdeskCustomer
         return $invoice;
     }
 
+    /**
+     * Check if the saved customer id is a valid SevDesk customer.
+     *
+     * @param  bool  $setCustomerIdToNullOnFail  - Whether to set the customer ID to null if the customer is not valid
+     * @return array|null - The SevDesk customer data
+     */
+    public function validateSevdeskCustomer(bool $setCustomerIdToNullOnFail = true): bool
+    {
+        $valid = $this->getSevdeskCustomer() !== null;
+
+        // If the customer is not valid, we set the customer ID to null
+        if (! $valid && $setCustomerIdToNullOnFail) {
+            $this->updateSevdeskCustomerId(null);
+        }
+
+        return $valid;
+    }
+
+    /**
+     * Add communication ways to the customer.
+     *
+     * @param  int|null  $sevdeskCustomerId  - The SevDesk customer ID
+     * @param  Address|null  $address  - The address to add
+     */
     protected function addCommunicationWays(?Address $address): void
     {
         $sevdeskCustomerId = $this->getSevdeskCustomerId();
@@ -142,5 +220,30 @@ trait SevdeskCustomer
         }
         // Dispatch a job to create the communication way
         dispatch($callable)->afterResponse();
+    }
+
+    /**
+     * Get the SevDesk customer data.
+     *
+     * @return array|null - The SevDesk customer data
+     */
+    protected function getSevdeskCustomer(): ?array
+    {
+        $customerId = $this->getSevdeskCustomerId();
+
+        if ($customerId === null) {
+            return null;
+        }
+
+        // Try to get the customer from SevDesk
+        try {
+            return LaravelSevdesk::contacts()->getContact($customerId);
+        } catch (\Throwable $th) {
+            Log::error('Could not get SevDesk customer: '.$customerId, [
+                'exception' => $th,
+            ]);
+        }
+
+        return null;
     }
 }
