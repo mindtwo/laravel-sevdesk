@@ -18,8 +18,7 @@ class LaravelSevdeskServiceProvider extends PackageServiceProvider
         $package
             ->name('laravel-sevdesk')
             ->hasConfigFile()
-            ->hasViews()
-            ->hasMigration('create_laravel_sevdesk_table')
+            ->hasMigration('add_sevdesk_customer_id_column_to_table')
             ->hasCommand(LaravelSevdeskCommand::class);
     }
 }
