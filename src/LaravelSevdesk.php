@@ -47,7 +47,7 @@ class LaravelSevdesk
      */
     public function contacts(): ContactsApi
     {
-        return new ContactsApi($this->apiToken);
+        return new ContactsApi($this->apiToken, $this->sevUser, $this->checkAccount);
     }
 
     /**
