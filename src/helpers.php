@@ -15,8 +15,8 @@ if (! function_exists('sevdesk')) {
     {
         $service = app(LaravelSevdesk::class);
 
-        if (method_exists($service, $domain)) {
-            $service->$domain();
+        if ($domain && method_exists($service, $domain)) {
+            return $service->$domain();
         }
 
         return $service;
