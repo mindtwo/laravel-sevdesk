@@ -244,13 +244,13 @@ class Invoice extends Data
 
     public bool $mapAll;
 
-    public string|Optional $addressName;
+    public null|string|Optional $addressName;
 
-    public string|Optional $addressStreet;
+    public null|string|Optional $addressStreet;
 
-    public string|Optional $addressZip;
+    public null|string|Optional $addressZip;
 
-    public string|Optional $addressCity;
+    public null|string|Optional $addressCity;
 
     /**
      * Create a new invoice
