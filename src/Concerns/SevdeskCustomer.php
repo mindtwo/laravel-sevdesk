@@ -153,8 +153,11 @@ trait SevdeskCustomer
             throw new \Exception('Could not create SevDesk invoice, customer ID is null. Please create the customer first.');
         }
 
+        $addressName = $options['addressName'] ?? $this->hasAttribute('name') ? $this->name : '';
+
         $invoiceData = Invoice::default([
             'contact' => $customerId,
+            'addressName' => $addressName,
             ...$options,
         ]);
 
