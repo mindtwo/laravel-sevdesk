@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-sevdesk` will be documented in this file.
 
+## v0.1.1 - 2025-08-15
+
+### What's Changed
+
+* fix: dto by @blumewas in https://github.com/mindtwo/laravel-sevdesk/pull/6
+
+**Full Changelog**: https://github.com/mindtwo/laravel-sevdesk/compare/0.1.0...0.1.1
+
 ## v0.0.4 - 2025-07-09
 
 ### What's Changed
