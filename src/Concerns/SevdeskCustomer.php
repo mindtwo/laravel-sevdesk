@@ -3,6 +3,7 @@
 namespace mindtwo\LaravelSevdesk\Concerns;
 
 use Illuminate\Support\Facades\Log;
+use mindtwo\LaravelSevdesk\Contracts\HasBuyerReference;
 use mindtwo\LaravelSevdesk\DataTransferObjects\Address;
 use mindtwo\LaravelSevdesk\DataTransferObjects\Invoice;
 use mindtwo\LaravelSevdesk\Enums\Contact\ContactStatusEnum;
@@ -16,6 +17,21 @@ use mindtwo\LaravelSevdesk\Facades\LaravelSevdesk;
  */
 trait SevdeskCustomer
 {
+    /**
+     * Get the academic title for SevDesk.
+     */
+    abstract protected function getAcademicTitle(): ?string;
+
+    /**
+     * Get the surename (first name) for SevDesk.
+     */
+    abstract protected function getSurename(): string;
+
+    /**
+     * Get the family name (last name) for SevDesk.
+     */
+    abstract protected function getFamilyname(): string;
+
     /**
      * Get the sevdesk customer ID.
      */
@@ -83,18 +99,10 @@ trait SevdeskCustomer
             return $this;
         }
 
-        $contactType = $contactType ?? ContactTypeEnum::CUSTOMER;
-
-        // TODO - DTO
         // Customer data for SevDesk
-        $customerData = [
-            'academicTitle' => $this->title ?? '',
-            'surename' => $this->first_name,
-            'familyname' => $this->last_name,
-            'category' => $contactType->toRequestArray(),
-            'status' => ContactStatusEnum::Active->value,
-            'buyerReference' => $this->uuid,
-        ];
+        $customerData = array_filter($this->getCustomerData($contactType), function ($value) {
+            return ! empty($value);
+        });
 
         // Send POST request to SevDesk API
         $contact = LaravelSevdesk::contacts()->createContact($customerData);
@@ -248,5 +256,25 @@ trait SevdeskCustomer
         }
 
         return null;
+    }
+
+    /**
+     * Get the customer data as an array.
+     *
+     * @return array<string, mixed>
+     */
+    protected function getCustomerData(?ContactTypeEnum $contactType = null): array
+    {
+        $contactType = $contactType ?? ContactTypeEnum::CUSTOMER;
+
+        // TODO - DTO?
+        return [
+            'academicTitle' => $this->getAcademicTitle(),
+            'surename' => $this->getSurename(),
+            'familyname' => $this->getFamilyname(),
+            'category' => $contactType->toRequestArray(),
+            'status' => ContactStatusEnum::Active->value,
+            'buyerReference' => $this instanceof HasBuyerReference ? $this->getBuyerReference() : null,
+        ];
     }
 }
